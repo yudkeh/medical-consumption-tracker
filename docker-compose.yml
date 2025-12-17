@@ -1,0 +1,23 @@
+version: '3.9'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: ori_app
+    environment:
+      # External DB connection - update these to your external DB settings
+      ORI_DB_HOST: your-db-host
+      ORI_DB_PORT: 5432
+      ORI_DB_NAME: ori_app
+      ORI_DB_USER: your-db-user
+      ORI_DB_PASSWORD: your-db-password
+      # App secrets
+      ORI_JWT_SECRET: change_me_in_real_deploy
+      ORI_JWT_EXPIRES_IN: 7d
+      ORI_ADMIN_USERNAME: admin
+      ORI_ADMIN_PASSWORD: admin_password
+      ORI_ADMIN_JWT_EXPIRES_IN: 1h
+    ports:
+      - "3001:3001"
