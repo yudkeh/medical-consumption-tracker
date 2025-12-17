@@ -16,10 +16,14 @@ import {
   DialogContent,
   DialogActions,
   Alert,
+  useMediaQuery,
+  useTheme,
 } from '@mui/material';
 import { adminAPI } from '../services/api';
 
 const AdminUsers = () => {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -82,7 +86,7 @@ const AdminUsers = () => {
 
   return (
     <Box>
-      <Typography variant="h4" component="h1" gutterBottom>
+      <Typography variant="h4" component="h1" gutterBottom sx={{ fontSize: { xs: '1.5rem', sm: '2rem' } }}>
         Admin - Users
       </Typography>
       {error && (
@@ -90,9 +94,14 @@ const AdminUsers = () => {
           {error}
         </Alert>
       )}
-      <Paper sx={{ p: 2 }}>
-        <TableContainer>
-          <Table>
+      <Paper sx={{ p: { xs: 1, sm: 2 } }}>
+        <TableContainer 
+          sx={{ 
+            maxHeight: { xs: '400px', sm: 'none' },
+            overflowX: 'auto'
+          }}
+        >
+          <Table size={isMobile ? 'small' : 'medium'}>
             <TableHead>
               <TableRow>
                 <TableCell>ID</TableCell>
@@ -147,6 +156,7 @@ const AdminUsers = () => {
       <Dialog
         open={resetDialogOpen}
         onClose={() => setResetDialogOpen(false)}
+        fullScreen={isMobile}
         maxWidth="sm"
         fullWidth
       >

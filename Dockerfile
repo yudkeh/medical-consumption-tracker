@@ -26,6 +26,9 @@ COPY backend/src ./src
 # Copy built frontend from frontend-build stage
 COPY --from=frontend-build /app/frontend/dist ./frontend/dist
 
+# Verify frontend files were copied (for debugging)
+RUN ls -la ./frontend/dist/ || echo "Frontend dist not found"
+
 # Expose port
 ENV PORT=3001
 EXPOSE 3001

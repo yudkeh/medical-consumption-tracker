@@ -22,12 +22,16 @@ import {
   Select,
   MenuItem,
   IconButton,
+  useMediaQuery,
+  useTheme,
 } from '@mui/material';
 import InfoIcon from '@mui/icons-material/Info';
 import { Medication, LocalHospital, Add as AddIcon, Print as PrintIcon, FileDownload as FileDownloadIcon } from '@mui/icons-material';
 import { drugsAPI, proceduresAPI } from '../services/api';
 
 const Dashboard = () => {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const [summary, setSummary] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -337,10 +341,10 @@ const Dashboard = () => {
 
   return (
     <Box>
-      <Typography variant="h4" component="h1" gutterBottom>
+      <Typography variant="h4" component="h1" gutterBottom sx={{ fontSize: { xs: '1.5rem', sm: '2rem' } }}>
         Dashboard
       </Typography>
-      <Typography variant="subtitle1" color="text.secondary" gutterBottom>
+      <Typography variant="subtitle1" color="text.secondary" gutterBottom sx={{ fontSize: { xs: '0.875rem', sm: '1rem' } }}>
         {today}
       </Typography>
 
@@ -350,19 +354,29 @@ const Dashboard = () => {
         </Paper>
       )}
 
-      <Grid container spacing={3} sx={{ mt: 2 }}>
+      <Grid container spacing={{ xs: 2, sm: 3 }} sx={{ mt: 2 }}>
         <Grid item xs={12} md={6}>
           <Card>
             <CardContent>
-              <Box display="flex" alignItems="center" mb={2}>
-                <Medication sx={{ mr: 1 }} />
-                <Typography variant="h6">Today's Drug Consumptions</Typography>
-                <Box sx={{ flexGrow: 1 }} />
+              <Box 
+                display="flex" 
+                flexDirection={{ xs: 'column', sm: 'row' }}
+                alignItems={{ xs: 'flex-start', sm: 'center' }}
+                mb={2}
+                gap={1}
+              >
+                <Box display="flex" alignItems="center" flexGrow={1}>
+                  <Medication sx={{ mr: 1, fontSize: { xs: '1.25rem', sm: '1.5rem' } }} />
+                  <Typography variant="h6" sx={{ fontSize: { xs: '1rem', sm: '1.25rem' } }}>
+                    Today's Drug Consumptions
+                  </Typography>
+                </Box>
                 <Button
                   size="small"
                   variant="outlined"
                   startIcon={<AddIcon />}
                   onClick={() => setDrugDialogOpen(true)}
+                  fullWidth={isMobile}
                 >
                   Record
                 </Button>
@@ -432,27 +446,39 @@ const Dashboard = () => {
         <Grid item xs={12} md={6}>
           <Card>
             <CardContent>
-              <Box display="flex" alignItems="center" mb={2}>
-                <LocalHospital sx={{ mr: 1 }} />
-                <Typography variant="h6">Today's Procedures</Typography>
-                <Box sx={{ flexGrow: 1 }} />
-                <Button
-                  size="small"
-                  variant="outlined"
-                  startIcon={<PrintIcon />}
-                  sx={{ mr: 1 }}
-                  onClick={() => setPrintDialogOpen(true)}
-                >
-                  Export
-                </Button>
-                <Button
-                  size="small"
-                  variant="outlined"
-                  startIcon={<AddIcon />}
-                  onClick={() => setProcedureDialogOpen(true)}
-                >
-                  Record
-                </Button>
+              <Box 
+                display="flex" 
+                flexDirection={{ xs: 'column', sm: 'row' }}
+                alignItems={{ xs: 'flex-start', sm: 'center' }}
+                mb={2}
+                gap={1}
+              >
+                <Box display="flex" alignItems="center" flexGrow={1}>
+                  <LocalHospital sx={{ mr: 1, fontSize: { xs: '1.25rem', sm: '1.5rem' } }} />
+                  <Typography variant="h6" sx={{ fontSize: { xs: '1rem', sm: '1.25rem' } }}>
+                    Today's Procedures
+                  </Typography>
+                </Box>
+                <Box display="flex" gap={1} width={{ xs: '100%', sm: 'auto' }}>
+                  <Button
+                    size="small"
+                    variant="outlined"
+                    startIcon={<PrintIcon />}
+                    onClick={() => setPrintDialogOpen(true)}
+                    fullWidth={isMobile}
+                  >
+                    Export
+                  </Button>
+                  <Button
+                    size="small"
+                    variant="outlined"
+                    startIcon={<AddIcon />}
+                    onClick={() => setProcedureDialogOpen(true)}
+                    fullWidth={isMobile}
+                  >
+                    Record
+                  </Button>
+                </Box>
               </Box>
               {summary?.procedures.length > 0 ? (
                 <List sx={{ mt: 1, borderRadius: 1, border: '1px solid #e0e0e0' }}>
@@ -513,6 +539,9 @@ const Dashboard = () => {
       <Dialog
         open={drugDialogOpen}
         onClose={() => setDrugDialogOpen(false)}
+        fullScreen={isMobile}
+        fullWidth
+        maxWidth="sm"
       >
         <DialogTitle>Record Drug Consumption</DialogTitle>
         <DialogContent>
@@ -611,6 +640,9 @@ const Dashboard = () => {
       <Dialog
         open={procedureDialogOpen}
         onClose={() => setProcedureDialogOpen(false)}
+        fullScreen={isMobile}
+        fullWidth
+        maxWidth="sm"
       >
         <DialogTitle>Record Procedure</DialogTitle>
         <DialogContent>
@@ -694,6 +726,7 @@ const Dashboard = () => {
       <Dialog
         open={noteDialogOpen}
         onClose={() => setNoteDialogOpen(false)}
+        fullScreen={isMobile}
         maxWidth="sm"
         fullWidth
       >
@@ -712,6 +745,9 @@ const Dashboard = () => {
       <Dialog
         open={printDialogOpen}
         onClose={() => setPrintDialogOpen(false)}
+        fullScreen={isMobile}
+        fullWidth
+        maxWidth="sm"
       >
         <DialogTitle>Print Procedures</DialogTitle>
         <DialogContent>

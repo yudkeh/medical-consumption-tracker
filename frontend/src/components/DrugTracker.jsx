@@ -24,6 +24,8 @@ import {
   FormControl,
   InputLabel,
   Select,
+  useMediaQuery,
+  useTheme,
 } from '@mui/material';
 import {
   Add as AddIcon,
@@ -33,6 +35,8 @@ import {
 import { drugsAPI } from '../services/api';
 
 const DrugTracker = () => {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const [drugs, setDrugs] = useState([]);
   const [consumptions, setConsumptions] = useState([]);
   const [schedules, setSchedules] = useState([]);
@@ -262,16 +266,23 @@ const DrugTracker = () => {
 
   return (
     <Box>
-      <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
-        <Typography variant="h4" component="h1">
+      <Box 
+        display="flex" 
+        flexDirection={{ xs: 'column', sm: 'row' }}
+        justifyContent="space-between" 
+        alignItems={{ xs: 'flex-start', sm: 'center' }}
+        mb={3}
+        gap={2}
+      >
+        <Typography variant="h4" component="h1" sx={{ fontSize: { xs: '1.5rem', sm: '2rem' } }}>
           Drug Tracker
         </Typography>
-        <Box>
+        <Box display="flex" gap={1} width={{ xs: '100%', sm: 'auto' }}>
           <Button
             variant="outlined"
             startIcon={<AddIcon />}
             onClick={() => setConsumptionDialogOpen(true)}
-            sx={{ mr: 1 }}
+            fullWidth={isMobile}
           >
             Record Consumption
           </Button>
@@ -283,13 +294,14 @@ const DrugTracker = () => {
               setDrugForm({ name: '', unit_type: 'pills', default_dosage: '' });
               setDrugDialogOpen(true);
             }}
+            fullWidth={isMobile}
           >
             Add Drug
           </Button>
         </Box>
       </Box>
 
-      <Grid container spacing={3}>
+      <Grid container spacing={{ xs: 2, sm: 3 }}>
         <Grid item xs={12} md={4}>
           <Card>
             <CardContent>
@@ -368,8 +380,14 @@ const DrugTracker = () => {
         </Grid>
 
         <Grid item xs={12} md={8}>
-          <TableContainer component={Paper}>
-            <Table>
+          <TableContainer 
+            component={Paper}
+            sx={{ 
+              maxHeight: { xs: '400px', sm: 'none' },
+              overflowX: 'auto'
+            }}
+          >
+            <Table size={isMobile ? 'small' : 'medium'}>
               <TableHead>
                 <TableRow>
                   <TableCell>Date</TableCell>
@@ -437,7 +455,13 @@ const DrugTracker = () => {
       </Grid>
 
       {/* Drug Dialog */}
-      <Dialog open={drugDialogOpen} onClose={() => setDrugDialogOpen(false)}>
+      <Dialog 
+        open={drugDialogOpen} 
+        onClose={() => setDrugDialogOpen(false)}
+        fullScreen={isMobile}
+        fullWidth
+        maxWidth="sm"
+      >
         <DialogTitle>
           {editingDrug ? 'Edit Drug' : 'Add New Drug'}
         </DialogTitle>
@@ -488,6 +512,9 @@ const DrugTracker = () => {
       <Dialog
         open={consumptionDialogOpen}
         onClose={() => setConsumptionDialogOpen(false)}
+        fullScreen={isMobile}
+        fullWidth
+        maxWidth="sm"
       >
         <DialogTitle>Record Drug Consumption</DialogTitle>
         <DialogContent>
@@ -589,6 +616,9 @@ const DrugTracker = () => {
       <Dialog
         open={scheduleDialogOpen}
         onClose={() => setScheduleDialogOpen(false)}
+        fullScreen={isMobile}
+        fullWidth
+        maxWidth="sm"
       >
         <DialogTitle>
           {editingScheduleDrug

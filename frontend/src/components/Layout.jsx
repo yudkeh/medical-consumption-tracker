@@ -14,6 +14,8 @@ import {
   ListItemIcon,
   ListItemText,
   IconButton,
+  useMediaQuery,
+  useTheme,
 } from '@mui/material';
 import {
   Dashboard as DashboardIcon,
@@ -28,6 +30,8 @@ const Layout = ({ user, onLogout }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   const menuItems = [
     { text: 'Dashboard', icon: <DashboardIcon />, path: '/' },
@@ -54,15 +58,23 @@ const Layout = ({ user, onLogout }) => {
           >
             <MenuIcon />
           </IconButton>
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+          <Typography variant="h6" component="div" sx={{ flexGrow: 1, fontSize: { xs: '1rem', sm: '1.25rem' } }}>
             Medical Tracker
           </Typography>
-          <Typography variant="body2" sx={{ mr: 2 }}>
-            {user?.username}
-          </Typography>
-          <Button color="inherit" onClick={handleLogout} startIcon={<LogoutIcon />}>
-            Logout
-          </Button>
+          {!isMobile && (
+            <Typography variant="body2" sx={{ mr: 2 }}>
+              {user?.username}
+            </Typography>
+          )}
+          {isMobile ? (
+            <IconButton color="inherit" onClick={handleLogout} aria-label="logout">
+              <LogoutIcon />
+            </IconButton>
+          ) : (
+            <Button color="inherit" onClick={handleLogout} startIcon={<LogoutIcon />}>
+              Logout
+            </Button>
+          )}
         </Toolbar>
       </AppBar>
 
@@ -87,7 +99,15 @@ const Layout = ({ user, onLogout }) => {
         </Box>
       </Drawer>
 
-      <Container maxWidth="lg" sx={{ mt: 4, mb: 4, flex: 1 }}>
+      <Container 
+        maxWidth="lg" 
+        sx={{ 
+          mt: { xs: 2, sm: 4 }, 
+          mb: { xs: 2, sm: 4 }, 
+          flex: 1,
+          px: { xs: 1, sm: 2 },
+        }}
+      >
         <Outlet />
       </Container>
     </Box>

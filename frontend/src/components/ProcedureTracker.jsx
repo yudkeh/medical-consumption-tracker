@@ -24,6 +24,8 @@ import {
   FormControl,
   InputLabel,
   Select,
+  useMediaQuery,
+  useTheme,
 } from '@mui/material';
 import {
   Add as AddIcon,
@@ -34,6 +36,8 @@ import {
 import { proceduresAPI } from '../services/api';
 
 const ProcedureTracker = () => {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const [procedures, setProcedures] = useState([]);
   const [records, setRecords] = useState([]);
   const [schedules, setSchedules] = useState([]);
@@ -423,16 +427,28 @@ const ProcedureTracker = () => {
 
   return (
     <Box>
-      <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
-        <Typography variant="h4" component="h1">
+      <Box 
+        display="flex" 
+        flexDirection={{ xs: 'column', sm: 'row' }}
+        justifyContent="space-between" 
+        alignItems={{ xs: 'flex-start', sm: 'center' }}
+        mb={3}
+        gap={2}
+      >
+        <Typography variant="h4" component="h1" sx={{ fontSize: { xs: '1.5rem', sm: '2rem' } }}>
           Procedure Tracker
         </Typography>
-        <Box>
+        <Box 
+          display="flex" 
+          flexDirection={{ xs: 'column', sm: 'row' }}
+          gap={1}
+          width={{ xs: '100%', sm: 'auto' }}
+        >
           <Button
             variant="outlined"
             startIcon={<FileDownloadIcon />}
             onClick={() => setExportDialogOpen(true)}
-            sx={{ mr: 1 }}
+            fullWidth={isMobile}
           >
             Export
           </Button>
@@ -440,7 +456,7 @@ const ProcedureTracker = () => {
             variant="outlined"
             startIcon={<AddIcon />}
             onClick={() => setRecordDialogOpen(true)}
-            sx={{ mr: 1 }}
+            fullWidth={isMobile}
           >
             Record Procedure
           </Button>
@@ -452,13 +468,14 @@ const ProcedureTracker = () => {
               setProcedureForm({ name: '' });
               setProcedureDialogOpen(true);
             }}
+            fullWidth={isMobile}
           >
             Add Procedure
           </Button>
         </Box>
       </Box>
 
-      <Grid container spacing={3}>
+      <Grid container spacing={{ xs: 2, sm: 3 }}>
         <Grid item xs={12} md={4}>
           <Card>
             <CardContent>
@@ -539,8 +556,14 @@ const ProcedureTracker = () => {
         </Grid>
 
         <Grid item xs={12} md={8}>
-          <TableContainer component={Paper}>
-            <Table>
+          <TableContainer 
+            component={Paper}
+            sx={{ 
+              maxHeight: { xs: '400px', sm: 'none' },
+              overflowX: 'auto'
+            }}
+          >
+            <Table size={isMobile ? 'small' : 'medium'}>
               <TableHead>
                 <TableRow>
                   <TableCell>Date</TableCell>
@@ -600,6 +623,9 @@ const ProcedureTracker = () => {
       <Dialog
         open={procedureDialogOpen}
         onClose={() => setProcedureDialogOpen(false)}
+        fullScreen={isMobile}
+        fullWidth
+        maxWidth="sm"
       >
         <DialogTitle>
           {editingProcedure ? 'Edit Procedure' : 'Add New Procedure'}
@@ -631,7 +657,13 @@ const ProcedureTracker = () => {
       </Dialog>
 
       {/* Record Dialog */}
-      <Dialog open={recordDialogOpen} onClose={() => setRecordDialogOpen(false)}>
+      <Dialog 
+        open={recordDialogOpen} 
+        onClose={() => setRecordDialogOpen(false)}
+        fullScreen={isMobile}
+        fullWidth
+        maxWidth="sm"
+      >
         <DialogTitle>Record Medical Procedure</DialogTitle>
         <DialogContent>
           <FormControl fullWidth margin="normal">
@@ -701,6 +733,9 @@ const ProcedureTracker = () => {
       <Dialog
         open={scheduleDialogOpen}
         onClose={() => setScheduleDialogOpen(false)}
+        fullScreen={isMobile}
+        fullWidth
+        maxWidth="sm"
       >
         <DialogTitle>
           {editingScheduleProcedure
@@ -783,7 +818,13 @@ const ProcedureTracker = () => {
       </Dialog>
 
       {/* Export Dialog */}
-      <Dialog open={exportDialogOpen} onClose={() => setExportDialogOpen(false)}>
+      <Dialog 
+        open={exportDialogOpen} 
+        onClose={() => setExportDialogOpen(false)}
+        fullScreen={isMobile}
+        fullWidth
+        maxWidth="sm"
+      >
         <DialogTitle>Export Procedure Records to Excel</DialogTitle>
         <DialogContent>
           <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
